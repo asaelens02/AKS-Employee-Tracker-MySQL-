@@ -88,7 +88,7 @@ function questionPrompt() {
 }
 //end inquirer function  list
 
-//employees function
+//employees function joins tables to retrieve all employee data and displays the table
 
 function viewAllEmployees () {
     let query =
@@ -114,6 +114,64 @@ function viewAllEmployees () {
         questionPrompt();
     });
 
+    //Employees by department
+    function viewEmployeesByDepartment(){
+        let query =
+        `SELECT
+            department.id, 
+            department.name,
+            role.salary
+        FROM employee
+        LEFT JOIN role
+            ON employee.role_id = role.id
+        LEFT JOIN department
+            ON department.id = role.department_id
+        GROUP BY department.id, department.name, role.salary`; //semi-colon ends sql function 
 
+    connection.query (query, (err, res)=> {
+        if (err) throw err;
+        const deptChoices = res.map((choices)=> ({
+            value: choices.id, name: choices.name
+        }));
+        console.table(res);
+        getDept(deptChoices);
+    });
+    }
+    //Select department (inquirer prompt)
+    function getDept (deptChoices){
+        inquirer
+            .prompt ([
+                {
+                    type: 'list',
+                    name:'department', 
+                    message:'Department List:',
+                    choices: deptChoices
+                }
+            ])
+            .then ((res)=> {
+            let query =
+                `SELECT 
+                    employee.id,
+                    employee.first_name,
+                    employee.last_name,
+                    role.title,
+                    department.name
+                FROM employee
+                JOIN role
+                    ON employee.role_id = role.id
+                JOIN department
+                    ON department.id = role.department_id
+                WHERE department.id =?` //question mark lets id be variable
+
+            connection.query(query, res.department, (err,res)=> {
+                if (err)throw err;
+                questionPrompt();//re-asks beginning question
+                console.table (res);
+            });
+        })
+    }
 }
+
+
+
 
