@@ -18,10 +18,10 @@ connection.connect(function (err){
     if (err) throw err;
 
     //begin inquiries function 
-    firstPrompt();
+    questionPrompt();
 });
 
-function firstPrompt() {
+function questionPrompt() {
 
     inquirer.prompt ([
         {
@@ -39,11 +39,48 @@ function firstPrompt() {
                 'Add Role', 
                 'Add Department',
                 'Exit'
-            
+            ]
         
 
 
         }
         
     ])
+
+    .then((res)=> {
+        console.log(res.userChoice);
+        switch(res.userChoice){
+            case 'View All Employees':
+                viewAllEmployees();
+                break;
+            case 'View All Departments':
+                viewAllDepartments();
+                break;
+            case 'View All Roles':
+                viewAllRoles();
+                break;
+            case 'View Employees by Department':
+                viewEmployeesByDepartment();
+                break;
+            case 'Add Employee':
+                addEmployee();
+                break;
+            case 'Remove Employee':
+                removeEmployee();
+                break;
+            case 'Update Employee Role':
+                updateRole();
+                break;
+            case 'Add Role':
+                addRole();
+                break;
+            case 'Add Department':
+                addDepartment();
+                break;
+            case 'Exit':
+                connection.end();
+                break;
+        }
+    })
 }
+
