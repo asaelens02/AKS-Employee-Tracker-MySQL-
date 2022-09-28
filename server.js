@@ -188,8 +188,41 @@ function viewAllEmployees () {
             salary: `${salary}`
         }));
         console.table (res);//this shows the table in Node
-        employeeRole(role);
-    })
+        employeeRole(role);//calls next function to enter employee information
+    });
+    }
+
+    function employeeRole(role){ //inquirer prompts to enter employee name and role
+        inquirer
+            .prompt ([{
+                type:'input',
+                name: 'firstName',
+                message:"Please enter employee's first name:"
+            },
+            {
+                type: 'input',
+                name: 'lastName',
+                message: "Please enter employee's last name:"
+            },
+            {
+                type: 'list',
+                name: 'roleId',
+                message: "Please select employee role",
+                choices: role
+            }
+
+            ])
+            .then ((res) => {
+                let query = `INSERT INTO employee SET ?`
+                connection.query (query, {
+                    first_name: res.firstName,
+                    last_name: res.lastName,
+                    role_id: res.roleId
+                }, (err, res) =>{
+                    if (err) throw err;
+                    questionPrompt();
+                });
+            });
     }
 }
 
