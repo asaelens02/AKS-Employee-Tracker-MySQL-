@@ -88,7 +88,7 @@ function questionPrompt() {
 }
 //end inquirer function  list
 
-//employees function joins tables to retrieve all employee data and displays the table
+//employees function joins tables to retrieve all employee data and displays the table, some is written in sql syntax
 
 function viewAllEmployees () {
     let query =
@@ -99,7 +99,7 @@ function viewAllEmployees () {
         role.title,
         department.name AS department,
         role.salary,
-        CONCAT(manager.first_name '' , manager.last_name) AS manager
+        CONCAT(manager.first_name, '' , manager.last_name) AS manager
     FROM employee
     LEFT JOIN role
         ON employee.role_id = role_id
@@ -169,6 +169,27 @@ function viewAllEmployees () {
                 console.table (res);
             });
         })
+    }
+    //function to add employee to employee table
+    function addEmployee () {
+        let query = 
+        `SELECT
+            role.id,
+            role.title,
+            role.salary
+        FROM role` 
+
+    connection.query(query, (err,res)=> {
+        //creates 'mapping' to table to enter the id, title, and salary.
+        if (err) throw err;
+        const role = res.map (({id, title,salary}) => ({
+            value: id,
+            title: `${title}`,
+            salary: `${salary}`
+        }));
+        console.table (res);//this shows the table in Node
+        employeeRole(role);
+    })
     }
 }
 
