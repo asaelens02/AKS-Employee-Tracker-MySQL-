@@ -22,7 +22,7 @@ connection.connect(function (err){
 });
 
 function questionPrompt() {
-
+    //First question for user to select what they would like to do...list
     inquirer.prompt ([
         {
             type:'list', 
@@ -46,7 +46,7 @@ function questionPrompt() {
         }
         
     ])
-
+    //once user chooses from list above the corresponding function below will execute. 
     .then((res)=> {
         console.log(res.userChoice);
         switch(res.userChoice){
@@ -82,5 +82,38 @@ function questionPrompt() {
                 break;
         }
     })
+    .catch ((err)=> {
+        if(err) throw err;
+    });
+}
+//end inquirer function  list
+
+//employees function
+
+function viewAllEmployees () {
+    let query =
+    `SELECT
+        employee.id,
+        employee.first_name,
+        employee.last_name,
+        role.title,
+        department.name AS department,
+        role.salary,
+        CONCAT(manager.first_name '' , manager.last_name) AS manager
+    FROM employee
+    LEFT JOIN role
+        ON employee.role_id = role_id
+    LEFT JOIN department
+        ON department.id = role.department_id
+    LEFT JOIN employee.manager
+        ON manager.id = employeer.manager.id`
+    
+    connection.query (query, (err, res)=> {
+        if (err) throw err;
+        console.table(res);
+        questionPrompt();
+    });
+
+
 }
 
