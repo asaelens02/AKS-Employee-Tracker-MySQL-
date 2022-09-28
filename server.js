@@ -114,6 +114,9 @@ function viewAllEmployees () {
         questionPrompt();
     });
 
+    //add function to view department table
+    //add function to view roles table
+
     //Employees by department
     function viewEmployeesByDepartment(){
         let query =
