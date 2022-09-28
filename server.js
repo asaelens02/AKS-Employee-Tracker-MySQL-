@@ -1,5 +1,5 @@
 //require mySQL, inquirer
-const mysql =require ('mysql');
+const mysql =require ('mysql2');
 const inquirer = require ('inquirer');
 require ('console.table');
 
@@ -220,7 +220,7 @@ function viewAllEmployees () {
                     role_id: res.roleId
                 }, (err, res) =>{
                     if (err) throw err;
-                    questionPrompt();
+                    questionPrompt();//back to first question
                 });
             });
     }
