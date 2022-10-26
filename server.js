@@ -1,13 +1,13 @@
 //require mySQL, inquirer
 const mysql =require ('mysql2');
-require ('inquirer');
+const inquirer = require ('inquirer');
 require ('console.table');
 
 //create connection with mysql
 const connection =mysql.createConnection({
 
     host: "localhost",
-    port:"3001",
+    port:"3306",
     user: "root",
     password: "@BamBam2020",
     database:"employees"
@@ -93,20 +93,20 @@ function questionPrompt() {
 function viewAllEmployees () {
     let query =
     `SELECT
-        employee.id,
-        employee.first_name,
-        employee.last_name,
+        employees.id,
+        employees.first_name,
+        employees.last_name,
         role.title,
         department.name AS department,
         role.salary,
         CONCAT(manager.first_name, '' , manager.last_name) AS manager
     FROM employee
     LEFT JOIN role
-        ON employee.role_id = role_id
+        ON employees.role_id = role_id
     LEFT JOIN department
         ON department.id = role.department_id
-    LEFT JOIN employee.manager
-        ON manager.id = employeer.manager.id`
+    LEFT JOIN employees.manager
+        ON manager.id = employees.manager.id`
     
     connection.query (query, (err, res)=> {
         if (err) throw err;
@@ -126,7 +126,7 @@ function viewAllEmployees () {
             role.salary
         FROM employee
         LEFT JOIN role
-            ON employee.role_id = role.id
+            ON employees.role_id = role.id
         LEFT JOIN department
             ON department.id = role.department_id
         GROUP BY department.id, department.name, role.salary`; //semi-colon ends sql function 
@@ -154,14 +154,14 @@ function viewAllEmployees () {
             .then ((res)=> {
             let query =
                 `SELECT 
-                    employee.id,
-                    employee.first_name,
-                    employee.last_name,
+                    employees.id,
+                    employees.first_name,
+                    employees.last_name,
                     role.title,
                     department.name
                 FROM employee
                 JOIN role
-                    ON employee.role_id = role.id
+                    ON employees.role_id = role.id
                 JOIN department
                     ON department.id = role.department_id
                 WHERE department.id =?` //question mark lets id be variable
@@ -216,7 +216,7 @@ function viewAllEmployees () {
 
             ])
             .then ((res) => {
-                let query = `INSERT INTO employee SET ?`
+                let query = `INSERT INTO employees SET ?`
                 connection.query (query, {
                     first_name: res.firstName,
                     last_name: res.lastName,
